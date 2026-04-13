@@ -112,7 +112,7 @@ Si el mensaje no tiene relación con el calendario, devuelve:
         messages=[{"role": "user", "content": prompt}]
     )
     raw = response.content[0].text.strip()
-    raw = re.sub(r"```json|```", "", raw).strip()
+    raw = re.sub(r"json|", "", raw).strip()
     return json.loads(raw)
 
 # ─── OPERACIONES EN GOOGLE CALENDAR ───────────────────────────────────────────
@@ -189,26 +189,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     service = get_calendar_service()
     if service:
         msg = (
-            "👋 Hola Brian\\! Soy tu asistente de Google Calendar\\.\n\n"
-            "✅ *Ya estás conectado a Google Calendar\\.*\n\n"
+            "👋 Hola Brian\! Soy tu asistente de Google Calendar\.\n\n"
+            "✅ *Ya estás conectado a Google Calendar\.*\n\n"
             "Puedes escribirme cosas como:\n"
-            "• `Reunión con cliente mañana a las 10am`\n"
-            "• `¿Qué tengo el viernes?`\n"
-            "• `Cancela la reunión con el estudio`\n"
-            "• `Mueve la llamada de mañana al lunes a las 3pm`\n\n"
+            "• Reunión con cliente mañana a las 10am\n"
+            "• ¿Qué tengo el viernes?\n"
+            "• Cancela la reunión con el estudio\n"
+            "• Mueve la llamada de mañana al lunes a las 3pm\n\n"
             "📋 *Comandos:*\n"
-            "/hoy \\- Ver eventos de hoy\n"
-            "/semana \\- Ver eventos de esta semana\n"
-            "/auth \\- Reconectar Google Calendar\n"
-            "/ayuda \\- Ver esta ayuda"
+            "/hoy \- Ver eventos de hoy\n"
+            "/semana \- Ver eventos de esta semana\n"
+            "/auth \- Reconectar Google Calendar\n"
+            "/ayuda \- Ver esta ayuda"
         )
     else:
         msg = (
-            "👋 Hola Brian\\! Soy tu asistente de Google Calendar\\.\n\n"
-            "⚠️ *Primero necesitas conectar tu cuenta de Google\\.*\n\n"
-            "Usa el comando /auth para comenzar\\."
+            "👋 Hola Brian\! Soy tu asistente de Google Calendar\.\n\n"
+            "⚠️ *Primero necesitas conectar tu cuenta de Google\.*\n\n"
+            "Usa el comando /auth para comenzar\."
         )
-    await update.message.reply_text(msg, parse_mode="MarkdownV2")
+    await update.message.reply_text(msg, )
 
 async def auth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     flow = Flow.from_client_config(
@@ -231,13 +231,13 @@ async def auth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["flow"] = flow
 
     msg = (
-        f"🔐 *Conectar Google Calendar*\n\n"
-        f"1\\. Abre este enlace en tu navegador:\n{auth_url}\n\n"
-        f"2\\. Inicia sesión con tu cuenta de Google\n"
-        f"3\\. Copia el código que aparece\n"
-        f"4\\. Pégalo aquí en este chat"
+        f"🔐 Conectar Google Calendar\n\n"
+        f"1. Abre este enlace en tu navegador:\n{auth_url}\n\n"
+        f"2. Inicia sesión con tu cuenta de Google\n"
+        f"3. Copia el código que aparece\n"
+        f"4. Pégalo aquí en este chat"
     )
-    await update.message.reply_text(msg, parse_mode="MarkdownV2", disable_web_page_preview=True)
+    await update.message.reply_text(msg, disable_web_page_preview=True)
 
 async def hoy(update: Update, context: ContextTypes.DEFAULT_TYPE):
     service = get_calendar_service()
@@ -289,7 +289,7 @@ async def procesar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(
                 "✅ *¡Google Calendar conectado exitosamente!*\n\n"
                 "Ya puedes escribirme eventos en lenguaje natural.\n"
-                "Ejemplo: `Reunión con cliente mañana a las 10am`",
+                "Ejemplo: Reunión con cliente mañana a las 10am",
                 parse_mode="Markdown"
             )
         except Exception as e:
@@ -395,9 +395,9 @@ async def procesar_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await update.message.reply_text(
                 "🤔 No entendí eso como una acción de calendario. Intenta con algo como:\n"
-                "• `Reunión mañana a las 3pm`\n"
-                "• `¿Qué tengo hoy?`\n"
-                "• `Cancela la llamada del viernes`"
+                "• Reunión mañana a las 3pm\n"
+                "• ¿Qué tengo hoy?\n"
+                "• Cancela la llamada del viernes"
             )
 
     except json.JSONDecodeError:
